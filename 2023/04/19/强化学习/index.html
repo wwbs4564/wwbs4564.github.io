@@ -1,0 +1,530 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>强化学习 | 无往不胜的博客</title><meta name="author" content="无往不胜"><meta name="copyright" content="无往不胜"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="第一讲 什么是RL？ RL与机器学习的区别 （有监督）机器学习的范式是：给一堆数据，学习一个函数，使得在输入为这些数据的情况下，输出尽量逼近这些数据的标签。  而强化学习的范式则是，给一个观测，智能体需要采取一个动作，使得奖励最大化。这个动作是什么？没人知道。这样的范式注定了强化学习会很难训练，但也让它有了比机器学习更高的上限——机器学习的效果最好不过也就是跟人类齐平，而强化学习则能超过人类。 R">
+<meta property="og:type" content="article">
+<meta property="og:title" content="强化学习">
+<meta property="og:url" content="http://example.com/2023/04/19/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/index.html">
+<meta property="og:site_name" content="无往不胜的博客">
+<meta property="og:description" content="第一讲 什么是RL？ RL与机器学习的区别 （有监督）机器学习的范式是：给一堆数据，学习一个函数，使得在输入为这些数据的情况下，输出尽量逼近这些数据的标签。  而强化学习的范式则是，给一个观测，智能体需要采取一个动作，使得奖励最大化。这个动作是什么？没人知道。这样的范式注定了强化学习会很难训练，但也让它有了比机器学习更高的上限——机器学习的效果最好不过也就是跟人类齐平，而强化学习则能超过人类。 R">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png">
+<meta property="article:published_time" content="2023-04-19T11:50:20.499Z">
+<meta property="article:modified_time" content="2023-04-19T12:16:36.823Z">
+<meta property="article:author" content="无往不胜">
+<meta property="article:tag" content="RL">
+<meta property="article:tag" content="ML">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2023/04/19/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  }
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '强化学习',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-04-19 20:16:36'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="无往不胜的博客" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">3</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">1</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/imgs/"><i class="fa-fw fas fa-images"></i><span> 图库</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg fixed" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="无往不胜的博客"><span class="site-name">无往不胜的博客</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/imgs/"><i class="fa-fw fas fa-images"></i><span> 图库</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">强化学习</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-04-19T11:50:20.499Z" title="发表于 2023-04-19 19:50:20">2023-04-19</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-04-19T12:16:36.823Z" title="更新于 2023-04-19 20:16:36">2023-04-19</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/ML/">ML</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="强化学习"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1>第一讲 什么是RL？</h1>
+<h2 id="RL与机器学习的区别">RL与机器学习的区别</h2>
+<p>（有监督）机器学习的范式是：给一堆数据，学习一个函数，使得在输入为这些数据的情况下，输出尽量逼近这些数据的标签。</p>
+<p><img src="/md_imgs/image-20221006143615984-1681905027333146.png" alt="image-20221006143615984"></p>
+<p>而强化学习的范式则是，给一个观测，智能体需要采取一个动作，使得奖励最大化。这个动作是什么？没人知道。这样的范式注定了强化学习会很难训练，但也让它有了比机器学习更高的上限——机器学习的效果最好不过也就是跟人类齐平，而强化学习则能超过人类。</p>
+<h2 id="RL与机器学习的联系——三步骤">RL与机器学习的联系——三步骤</h2>
+<p>但是，从另一个角度讲，强化学习和机器学习也很接近：</p>
+<p>机器学习的三个步骤是：</p>
+<ol>
+<li>设定一个模型；</li>
+<li>定义损失函数；</li>
+<li>优化模型参数，使得损失最小化。</li>
+</ol>
+<p>强化学习也同样是三个步骤：</p>
+<ol>
+<li>设定一个模型；</li>
+</ol>
+<p>只不过这个模型的输入是（对环境的）观测，输出是采取的动作。</p>
+<ol start="2">
+<li>定义损失函数；</li>
+</ol>
+<p>强化学习的过程可以表述如下：</p>
+<p>接受观测s，根据观测采取动作a，由于动作a得到了奖励r；继续接受观测s…</p>
+<p>再简单一点就是：</p>
+<p>$s-&gt;a-&gt;r-&gt;s-&gt;a-&gt;r…$</p>
+<p>从开始到结束的整个过程，被称为一个episode。把episode中的每个奖励r加起来，就得到了总奖励R，这是我们想要最大化的。而最大化R，等价于最小化-R，因此在强化学习中，我们的“损失”就是-R。</p>
+<ol start="3">
+<li>优化模型参数，使得损失最小化。</li>
+</ol>
+<p>将上面的过程用图来表示：</p>
+<p><img src="/md_imgs/image-20221006150442716-1681905027333145.png" alt="image-20221006150442716"></p>
+<p>乍一看，这有点像RNN，那么是不是直接可以用梯度下降的方法来训练actor呢？很遗憾，不行。</p>
+<p>首先，actor的输出是有随机性的，因为它不是直接输出动作，而是输出动作的概率分布，对这个概率分布采样的结果才是采取的动作；</p>
+<p>其次，一个更大的问题是，虽然actor是一个神经网络，但环境和奖励不是，它们在一些情况下甚至是黑盒子，还可能是带有随机性的黑盒子。</p>
+<h2 id="如何控制actor的行为">如何控制actor的行为</h2>
+<p>接下来，我们探讨一下如何控制actor的行为。比如，我们想要让actor在看到某个状态s时，采取动作a。</p>
+<p>那么我们要做的，就是把s输入actor，将actor的输出a与$\hat{a}$做cross entropy得到一个loss，通过最小化这个loss，我们就能让actor在看到s时采取动作a。</p>
+<p>如果目的反过来，我们希望actor在看到s时不要采取a呢？很简单，把上面的loss取个负号当作新loss，最小化这个新loss就能达到我们的目的。</p>
+<p><img src="/md_imgs/image-20221006151720848-1681905027334148.png" alt="image-20221006151720848"></p>
+<p>复杂一点，如果我们希望actor在看到s时采取a，看到s’时采取a’呢？也不困难，将a与$\hat{a}$做cross entropy得到$e_1$，a‘与$\hat{a’}$做cross entropy得到$e_2$，$e_1-e_2$就是我们的loss，最小化这个loss就能达到我们的目的。</p>
+<p><img src="/md_imgs/image-20221006152119833-1681905027333147.png" alt="image-20221006152119833"></p>
+<p>那么，如果我们收集了大量类似上面这种的数据（看到$s_1$的时候做$a_1$，看到$s_2$的时候不要做$a_2$…），我们其实就可以训练actor了！</p>
+<p><img src="/md_imgs/image-20221006152324148-1681905027334149.png" alt="image-20221006152324148"></p>
+<p>更进一步，如果我们对采取行为的判断不单是二元的yes/no，而是一个分数（看到s时，采取a得10分；看到s’时，采取a’扣5分），那我们就可以更为精细地训练actor：</p>
+<p><img src="/md_imgs/image-20221006152624229-1681905027334150.png" alt="image-20221006152624229"></p>
+<p>不过，所有的一切都要建立在一个前提上：我们需要获取一大堆s和a的pair，以及相对于的分数A。</p>
+<h1>第二讲 Policy Gradient</h1>
+<h2 id="方法一">方法一</h2>
+<p>书接上回，我们先来看第一种获取s-a的pair以及对应的A的方法：</p>
+<p><img src="/md_imgs/image-20221006153650305-1681905027334156.png" alt="image-20221006153650305"></p>
+<p>在这个方法里，我们观察某个actor、（暂且把它当成随机的）与环境的互动过程，将过程中的s，a，r记录下来，它们就是我们所想要的s-a对以及A。</p>
+<p>需要注意的是，我们可能不止观测一个episode，为了获取足够的训练数据，我们往往需要观测多个episode。</p>
+<p>这个方法并不是一个好方法，用这种方法收集到的数据训练出来的actor，采取行动的标准仅仅是当下的奖励。然而，actor在时间点t采取的行动$a_t$，不仅会影响到当前的奖励$r_t$，更会影响后续的观测、动作以及奖励——这意味着，最大化当下的奖励，不一定能最大化总奖励，有时候甚至两者是背道而驰的。</p>
+<h2 id="方法二">方法二</h2>
+<p><img src="/md_imgs/image-20221006154835918-1681905027334151.png" alt="image-20221006154835918"></p>
+<p>方法二修正了方法一短视的问题。在方法二中，A不再是当下的奖励，而是当下以及之后所有奖励的加和。</p>
+<h2 id="方法三">方法三</h2>
+<p>方法二也有一个问题，我们用两个例子来说明这个问题：</p>
+<p>第一个是space invader的游戏（或者是其他任何的简单游戏）。如果使用方法二，相当于是在告诉你的actor：无论整个episode有多长，比如说长到了有10000个循环，任何后面的奖励都应该归功于前面的动作——直白一点说，它会认为不仅$r_2$要归功于$a_1$，$r_{10000}$也要归功于$a_1$，但这很显然是不合理的。</p>
+<p>第二个是股票市场。我们都知道，货币是有时间价值的，同样数额的货币，在当前得到一定比未来得到要好。可是在方法二中，$r_1$和$r_{10000}$只有绝对数值上的差别，却没有考虑时间价值。这样训练出来的actor，会把当前的100元和一百年后的100元当成一样的东西，这也显然是不合理的。</p>
+<p>因此，我们就有了方法三：</p>
+<p><img src="/md_imgs/image-20221006155522779-1681905027334153.png" alt="image-20221006155522779"></p>
+<p>它只是在方法二中加上了折扣因子$\gamma$，任何非当下的奖励都要乘上折扣因子之后才能被算入G中，越往后的奖励乘折扣因子的次数越多，因此算入G的比例就越少。</p>
+<h2 id="方法四">方法四</h2>
+<p>如果在我们的环境里，r的取值是[10, 100]，也即，r最小取10，那么我们之前的所有方法通通都会失效。因为，当r取10时，我们人类知道对应的行为是不好的，但因为10是一个正数，actor仍会傻傻地认为这个行为是值得鼓励的。</p>
+<p>因此方法四就横空出世：</p>
+<p><img src="/md_imgs/image-20221006160431680-1681905027334152.png" alt="image-20221006160431680"></p>
+<p>它的方法很简单，就是在方法三的基础上，把所有的G先减掉一个baseline/b，再当作A。（至于baseline怎么定，这里先不讨论）</p>
+<h2 id="Policy-Gradient">Policy Gradient</h2>
+<p>说了一大堆，总算可以进入policy gradient了：</p>
+<p><img src="/md_imgs/image-20221006160649148-1681905027334159.png" alt="image-20221006160649148"></p>
+<p>过程是这样的：</p>
+<ol>
+<li>随机初始化一个actor；</li>
+<li>用我们以上的方法，通过观测actor得到训练数据，然后用训练数据更新<strong>一次</strong>actor的参数，得到一个新的actor</li>
+<li>观测新actor，得到新训练数据，再更新actor…</li>
+<li>不断重复，直到到达迭代次数为止。</li>
+</ol>
+<p>这个过程一个很大的特点是，收集训练数据的过程是在for循环里面的，一组数据只能用于更新一次actor，一个actor也只能用于一组训练数据的收集。</p>
+<p>可以想见，这样的过程是非常耗时间的。</p>
+<p>至于为什么要使用这样繁琐的过程呢？李宏毅老师举了一个下棋的例子：同一个局势下的同一步棋，对于棋力低的棋士来说可能是好的，但对于棋力高的棋士可能就是坏的。</p>
+<p>在我们的过程中，迭代次数少的actor就是“棋力低的棋士”，观测它得到的训练数据对于“棋力高的棋士”，也即迭代次数多的actor来说没用，甚至可能起反作用。</p>
+<h2 id="On-policy-VS-Off-policy">On-policy VS Off-policy</h2>
+<p>On-policy就是说，我们要train的actor，和我们用于观测得到数据的actor是同一个；</p>
+<p>而Off-policy则相反，我们要train的actor，和我们用于观测得到数据的actor不是同一个。</p>
+<p>Off-policy相较于On-policy有一个显而易见的好处，那就是不用在迭代中收集训练数据了，一开始观测得到的训练数据可以用好多次。</p>
+<p>还是拿围棋举例：On-policy就好像是让一个棋士不断从自己的对局中吸取经验和教训，从低水平逐渐成长到高水平；而Off-policy则是让一个棋士从一开始就学习顶尖棋士的对局。</p>
+<p>Off-policy有一个关键点：我们train的actor必须知道自己和用于观测的actor的区别。就好比，普通人找一个帅哥吸取恋爱经验，普通人必须知道，帅哥的一些经验可能并不能适用于自己，因为自己没有帅哥的颜值。</p>
+<h2 id="随机性的重要性">随机性的重要性</h2>
+<p>Policy gradient的过程决定了，只有一个行动实实在在地被采取过了，actor才知道它好还是不好。因此，为了能收集到足够的训练数据，让我们训练的actor充分地知道某个行为到底是好还是不好，用于观测的那个actor应该具有随机性，甚至我们会刻意地加大它的随机性。</p>
+<h1>第三讲 Actor-Critic</h1>
+<h2 id="简介">简介</h2>
+<p>给定某个actor和某个状态s，Critic的工作是要计算actor接下来将获得的总奖励的期望，也即G的期望。</p>
+<p>一个简单的Critic就是所谓的价值函数：</p>
+<p><img src="/md_imgs/image-20221006164718452-1681905027334154.png" alt="image-20221006164718452"></p>
+<p>一个需要注意的点，价值函数是随actor而定的，也即同样的s，根据不同的actor，应该被喂给不同的价值函数，进而会计算出不同的价值。</p>
+<h2 id="训练Critic">训练Critic</h2>
+<h3 id="蒙特卡洛法">蒙特卡洛法</h3>
+<p>第一种方法是蒙特卡洛法，或者说力大砖飞法：我们需要收集大量的数据，其中x是各种状态，y是各种状态对应的G，用这些数据训练某个模型，得到的模型就是Critic。</p>
+<p>需要进一步说明的是，由于actor的随机性，同样的状态，不会对应一个单一的G，而是对应一个G的概率分布。对于同一个s，我们收集的训练数据（G）越多，其均值越逼近期望。因此，如果采取蒙特卡洛法，我们应该收集尽可能多的训练数据。</p>
+<p>蒙特卡洛法的缺点很明显，一是要收集很多数据，二是每一条数据的收集都要求走完整个episode。而如果episode很长，或者说根本没有尽头，蒙特卡洛法就不灵了。为此，我们就需要第二种方法，即时序差分法（Temporal-difference）。</p>
+<h3 id="时序差分法">时序差分法</h3>
+<p>与蒙特卡洛法不同，为了计算$E(G_t)$，时序差分法仅要求以下四个数据：</p>
+<p>$s_t, a_t,r_t,s_{t+1}$</p>
+<p>这其实是根据不同时间点G/E(G)的递推关系得来的：</p>
+<p><img src="/md_imgs/image-20221006170757513-1681905027334155.png" alt="image-20221006170757513"></p>
+<p>也即，要想知道$G_t$（这里省略掉期望），我们只需要知道$r_t$和$G_{t+1}$，而为了知道$G_{t+1}$，我们只需要知道$r_{t+1}$和$G_{t+2}$…以此类推。</p>
+<h3 id="两种方法的对比">两种方法的对比</h3>
+<p>针对同样的训练数据，这两种方法有可能会训练出不同的价值函数/Critic。</p>
+<p><img src="/md_imgs/image-20221007174130894-1681905027334157.png" alt="image-20221007174130894"></p>
+<p>在计算$V(s_b)$时，如果采用蒙特卡洛法，由于$s_a$仅出现在第一条数据中，且其对应的G=0，因此结果会是0；</p>
+<p>而如果采用时序差分法，由于在第一条数据中，$s_b$紧跟着$s_a$出现，因此我们会得到：</p>
+<p><img src="/md_imgs/image-20221007174337826-1681905027334158.png" alt="image-20221007174337826"></p>
+<p>这样计算的结果会是$\frac{3}{4}$。</p>
+<h2 id="方法五">方法五</h2>
+<p>在训练Actor的方法四中，我们留了一个没有解决的问题：</p>
+<p><img src="/md_imgs/image-20221006160431680-1681905027334152.png" alt="image-20221006160431680"></p>
+<p>那就是该如何确定对G的标准化项b。</p>
+<p>而有了Critic后，我们可以将b定为对应状态的价值，即：</p>
+<p><img src="/md_imgs/image-20221007175005388-1681905027334160.png" alt="image-20221007175005388"></p>
+<p>这样做的逻辑在哪里呢？还是要回到G和V的意义上来解释。</p>
+<p>G是什么？是actor看到了s且执行了a后，后续的奖励。</p>
+<p>V是什么？是actor看到了s后，后续的奖励的累积。</p>
+<p>那么，如果G&gt;V，相当于是在说，actor在看到s后执行a所获得的奖励，比actor看到s后奖励的期望要高——换言之，actor在看到s之后，应该执行a。</p>
+<h2 id="方法六">方法六</h2>
+<p>方法五其实还有一个不太容易注意到的问题。</p>
+<p>V这个期望里，至少包含了两层东西：</p>
+<p>首先，actor在看到s后，可能会执行不同的动作$a_1, a_2…$，V首先是执行不同动作后奖励的期望；</p>
+<p>其次，比如actor在看到s后执行了$a_1$，在这种前提下，由于随机性的存在，后续的奖励也仍然是一个期望，而不是一个确定的数。</p>
+<p>这时再来看G，就会发现问题了。它实际上只是在“actor在看到s后执行$a_1$”这个前提下，对后续奖励的一次<strong>采样</strong>，而根据你的运气，采样的结果会有很大的不同，这就会导致如下的情况出现：</p>
+<p>actor在看到s后的奖励的期望是10，在看到s后执行a的奖励的期望是15，也即在看到s后执行a是一个比较好的选择。但是，由于你的运气比较差，对“看到s后执行a的奖励”采样的结果是-10，这会让你得出“看到s后不应执行a”的判断。</p>
+<p>所以说，不能直接那单次的采样结果G去减V，而是要将G换成一个期望：</p>
+<p>$A=r_t+V(s_{t+1})-V(s_t)$</p>
+<p>这个方法有一个名字，叫Advantage Actor-Critic。</p>
+<h2 id="Actor-Critic的参数共享">Actor Critic的参数共享</h2>
+<p><img src="/md_imgs/image-20221007184042296-1681905027334161.png" alt="image-20221007184042296"></p>
+<p>图非常的明白，不做过多解释。</p>
+<h1>第四讲 Reward Shaping</h1>
+<p>我们之前讲到的训练actor的所有方法，都会在一种情况下失效，这种情况有一个名字叫做“Sparse reward”，即reward在绝大多数情况下都是0。</p>
+<p>一个典型的例子是下围棋：只有到棋局结束，分出胜负的那一刻，才有一个正或负的reward，而在棋局中每一步的reward都是0.</p>
+<p>其实，还有场景比下围棋更极端，比如让机械手拧螺丝。在这个场景中，如果拧进螺丝，就有正的reward，反之为负的reward。但是，actor的参数一开始是随机的，它很可能在空中随便挥舞，连要拿起螺丝都不知道，这样在整个过程中的所有reward都是0，而围棋至少在结束时，根据输赢有一个非零的reward。</p>
+<p>解决这个问题的方法就是reward shaping：除了那个“真正”的reward，我们要想办法加入一些“额外”的reward来引导或者“激励”actor往正确的方向走。</p>
+<p>reward shaping完全依赖于研究者的经验和主观判断，我们来看一个例子：</p>
+<p><img src="/md_imgs/image-20221031094004339.png" alt="image-20221031094004339"></p>
+<p>这是一个射击游戏的例子，其中中间的那几项都好理解，我们主要来看一下最后两项和第一项。</p>
+<p>最后两项是在说：如果你待在原地不动，就要扣分，而如果你动了，就有加分。为什么要有这两项呢？因为，我们的actor一开始很弱，它可能一出去就被敌人打死，进而得到负的reward。这样，它就会认为：我出去就死，而死是不好的事情，那我不如待在原地不动。但是，待在原地不动肯定不是我们想要的，因此需要有这两项reward。</p>
+<p>而第一项是在说：如果你活着，就要扣分。这乍一看很奇怪：活着不是好事吗，死了才要惩罚啊，为什么反而活着要扣分？但是，还是上面的原因，actor一开始很弱，为了不受到死的惩罚，它会选择躲开所有敌人，比如说在地图边缘打转，而这也不是我们想要的。</p>
+<p>还有一个有趣的方法，叫做curiosity-based reward shaping。这个方法的意思是，只要actor看到了新东西，就给它一个奖励。比如说马里奥，这是一个横板卷轴游戏，过关是在地图的最右侧，而为了看到新东西actor也需要往右移动，因此仅仅用curiosity-based reward，就能训练出一个玩马里奥的actor。</p>
+<h1>第五讲 无reward</h1>
+<p>reward在游戏这种“人造”的环境中比较好定，而在现实世界中，reward会很难确定。即使你能想出一个reward，这个reward也可能会引导actor去做一些你意想不到的行为。比如，你要求机器人遵循所谓的“三原则”，但机器人可能觉得遵循三原则最好的方法是把人类通通关起来，这样没有就任何人会受到伤害。</p>
+<p>因此，有些时候我们可能需要让actor在无reward的条件下学习。都没有reward了，actor怎么知道它该干什么呢？答案是，我们找一些“expert”，记录他们的行动，告诉actor，expert怎么做，你就怎么做。</p>
+<p>这好像就回到了监督学习，对吧？我们有一堆训练数据$(s_1, a_1)…(s_n, a_n)$，把它们喂给actor，训练后的actor在看到$s_1$时就会做$a_1$…看到$s_n$时就会做$a_n$了，这种方法有一个名字，叫behavior cloning。</p>
+<p>但这个方法有一些问题：</p>
+<ol>
+<li>对expert行动的记录是有限的，我们不可能穷尽所有的情况。比如说一个自动驾驶的情景，所有expert（也就是人类司机）都能顺利地右转弯，而这就导致actor学不到右转弯失败，快要撞墙的时候该怎么办。</li>
+<li>expert的行动并非全部都有意义，有些行动可能是expert的个人习惯，其实根本不需要actor去学习。当然，如果能完全复刻expert的行动，连带着个人习惯一起学过来也没太大问题，但问题是，actor的能力是有限的，万一它只能学到expert行动的一部分，而这一部分又刚好是没有意义的那些，那就惨了。</li>
+</ol>
+<p>这，就引出了所谓的Inverse RL。</p>
+<p>一般的RL长这样：</p>
+<p><img src="/md_imgs/image-20221031094109758.png" alt="image-20221031094109758"></p>
+<p>actor是根据我们定好的reward，来决定自己该干什么。</p>
+<p>而Inverse RL则是：</p>
+<p><img src="/md_imgs/image-20221031094153293.png" alt="image-20221031094153293"></p>
+<p>actor根据expert的行动，去反推出一个reward function，然后就可以用一般的RL方法去学习了。</p>
+<p>具体算法步骤如下：</p>
+<p><img src="/md_imgs/image-20221031094250855.png" alt="image-20221031094250855"></p>
+<p>这个过程其实跟GAN的思想是非常像的：</p>
+<p><img src="/md_imgs/image-20221031094315764.png" alt="image-20221031094315764"></p>
+<h1>第六讲 PPO</h1>
+<h2 id="Importance-Sampling">Importance Sampling</h2>
+<p>假设我们想计算下面这个式子：</p>
+<p><img src="/md_imgs/image-20221009085906437.png" alt="image-20221009085906437"></p>
+<p>（即f(x)的期望，其中x属于某个分布p）</p>
+<p>自然而然的方法是从p里面sample一些x，然后对f(x)做平均：</p>
+<p><img src="/md_imgs/image-20221009090006062.png" alt="image-20221009090006062"></p>
+<p>但是，如果我们不能从p里面sample，而是只能从另一个分布q里sample呢？</p>
+<p>事实上，原式子可以做如下变形：</p>
+<p><img src="/md_imgs/image-20221009090230705.png" alt="image-20221009090230705"></p>
+<p>这样我们就把从p里面sample的问题转化成从q里面sample的问题了。</p>
+<p>理论上讲，q可以是任何分布，但在实操中，q不能和p差别太大：</p>
+<p><img src="/md_imgs/image-20221009090932622.png" alt="image-20221009090932622"></p>
+<p>在图中，我们分别计算了两个式子的方差，可以发现，差别只在第二个式子的第一项多了一个$\frac{p(x)}{q(x)}$。如果p和q差别很大，变换后式子的方差也就会很大。这就导致，虽然从理论上说，只要你sample足够多次，前一个式子和后一个式子的期望相同，但因为你sample的次数是有限的，因为较大的方差，你一旦运气不好，通过sample得到的结果会和实际差别很大。</p>
+<p>看一个更清晰的例子：</p>
+<p><img src="/md_imgs/image-20221009091418507.png" alt="image-20221009091418507"></p>
+<p>很显然，$E_{x-p}(f(x))$应该是负数。但由于q分布在右边的概率大，你的sample很可能都在右边，根据这些sample算出来的结果会是正数。</p>
+<h2 id="PPO">PPO</h2>
+<p>我们原来on-policy的方法是这样的：</p>
+<p><img src="/md_imgs/image-20221009092302439.png" alt="image-20221009092302439"></p>
+<p>对于每一个(s,a)对，首先计算一个代表其好坏的A，然后用A乘上actor看到s时采取a的log_prob。将所有(s, a)对的结果相加，取负号，就得到了要Minimize的loss。</p>
+<p>而现在运用上importance sampling后，off-policy的做法则是：</p>
+<p><img src="/md_imgs/image-20221009092746941.png" alt="image-20221009092746941"></p>
+<p>用条件概率的式子对前面的importance weight做拆解：</p>
+<p><img src="/md_imgs/image-20221009093043193.png" alt="image-20221009093043193"></p>
+<p>拆解出来了两部分：其中，第一部分很简单，就是把s输入对应的network后，结果是a的概率；</p>
+<p>第二项，可以直接去掉，有两个理由：</p>
+<ol>
+<li>这项我们其实算不了；</li>
+<li>看到什么s，跟我们的actor关系不大，也就是说这项应该接近于1.</li>
+</ol>
+<p>用语言来解释一下现在的算法：</p>
+<ol>
+<li>用那个跟环境做互动的actor采样出一些(s, a)对，并且计算出对应的“分数”A；</li>
+<li>对于每一个(s, a)对，用A乘上我们要训练的actor看到s时，输出a的log_prob，然后再额外乘上Importance weight；</li>
+<li>对所有的(s, a)对做加和，去负号，就得到了我们的loss。</li>
+</ol>
+<p>但是到这里还不是全部，因为importance sampling有一个前提，就是两个分布，在这里就是两个actor不能相差太大。</p>
+<p>因此，PPO的损失函数要加上额外的一项，来保证两个actor之间差距不会太大：</p>
+<p>$\beta KL(actor, actor’)$</p>
+<p>其中，$\beta$是超参数；后面的那项代表的是，两个actor<strong>行为</strong>的KL散度（而不是actor本身参数的KL散度）。加上这一项后，最小化loss的时候就也会连带着保证用于训练的actor和用于与环境互动的actor之间的行为差距不会太大。</p>
+<p>（这个KL散度的具体计算是：对于你收集到的每一个s，把它分别输入两个actor，对输出做KL散度，然后做平均）</p>
+<p>这边还有一个动态调整超参数$\beta$的小技巧：</p>
+<p><img src="/md_imgs/image-20221009095356026.png" alt="image-20221009095356026"></p>
+<h2 id="PPO2">PPO2</h2>
+<p>PPO2相比PPO的区别，是拿掉了KL散度，然后对loss做了如下改变（这里其实是目标函数而非loss，因此没有后面的log_prob项）：</p>
+<p><img src="/md_imgs/image-20221009100409292.png" alt="image-20221009100409292"></p>
+<p>这个式子的意义在于：</p>
+<p>在A&gt;0的时候，我们肯定是希望$p_{\theta}(a_t|s_t)$越大越好。但是这种大有一个前提条件，$p_{\theta}(a_t|s_t)$不能比$p_{\theta’}(a_t|s_t)$大太多，如果大了太多，就不符合importance sampling的前提了，所以如果大了太多，我们就要做clip；</p>
+<p>反之在A&lt;0的时候，我们希望$p_{\theta}(a_t|s_t)$越小越好，同样的，小可以，但不能比$p_{\theta’}(a_t|s_t)$小太多，否则就要做clip。</p>
+<p><img src="/md_imgs/image-20221009101532246.png" alt="image-20221009101532246"></p>
+<h1>Q-Learning</h1>
+<p>Q-Learning的思想是，不直接训练actor，而是训练一个Critic，让Critic来指导Actor该如何做出行动。</p>
+<h2 id="作为V函数的Critic">作为V函数的Critic</h2>
+<p>作为状态价值函数$V^{\pi}(s)$的Critic，它接受某一个状态s，任务是预测当前这个actor在看到s后，直到episode结束获得的G的期望。</p>
+<p>有两种方法可以训练Critic：</p>
+<ol>
+<li>蒙特卡洛（MC）法：收集一大堆包含对应的(s, G)对的训练数据，然后直接当成一个回归问题（x是s，y是G）来做。</li>
+<li>时序差分（TD）法。</li>
+</ol>
+<p>时序差分法的基础是这个式子：$V(s_t)=r_t+V(s_{t+1})$</p>
+<p>这个式子的含义是，actor在看到$s_t$后的G的期望，可以被分解为两部分：</p>
+<p>一部分是actor在看到$s_t$后会采取行动并获得的奖励（这个行动是有随机性的，进而奖励也是有随机性的，因此其实是“奖励的期望”而非奖励本身，但实操中一般不考虑这么多）；</p>
+<p>另一部分是actor在看到下一个状态$s_{t+1}$后的G的期望。</p>
+<p>我们对这个式子做一个变形：$r_t=V(s_t)-V(s_{t-1})$</p>
+<p>$r_t$是一个确定的值，因此可以把它看作一个y，而这里的$\hat{y}$则是$V(s_t)-V(s_{t-1})$，我们的目标就是要让$V(s_t)-V(s_{t-1})$尽量靠近$r_t$：</p>
+<p><img src="/md_imgs/image-20221031094526138.png" alt="image-20221031094526138"></p>
+<p>MC和TD法各有优劣。MC，它最大的缺点就是需要走完一整个episode才能开始训练，而相比之下TD每一步就可以训练一次。</p>
+<p>另外，MC和TD中的随机变量是不一样的。在MC中，随机变量是G，而在TD中随机变量是r。而由于G是多个r的加和，因此G的方差比起r来就大得多，这就导致MC法相比TD法要收集多得多的数据才行。</p>
+<h2 id="作为Q函数的Critic">作为Q函数的Critic</h2>
+<p>作为动作价值函数$Q^{\pi}(s, a)$的Critic，它接受s和a，任务是预测做出a之后的G的期望。</p>
+<p>光这样说，脑海里浮现出的Critic应该长下面这样：</p>
+<p><img src="/md_imgs/image-20221031094607910.png" alt="image-20221031094607910"></p>
+<p>但实际上，Critic还有另外一种模样：它只接受s，然后有好几个输出，每个输出分别对应着actor在看到s后采取的每个可能动作：</p>
+<p><img src="/md_imgs/image-20221031094618635.png" alt="image-20221031094618635"></p>
+<p>第二种Critic显然只适用于离散动作空间的情况。</p>
+<h2 id="Q-Learning算法">Q-Learning算法</h2>
+<p>Q-Learning中采用的是作为Q函数的Critic。具体步骤是这样的：</p>
+<p>首先，我们随机初始化一个actor，记录它跟环境的互动，收集到训练数据；</p>
+<p>然后，用训练数据去训练出一个Critic出来；</p>
+<p>最后，根据这个Critic，我们就能找到一个比原来更好的新的actor。</p>
+<p><img src="/md_imgs/image-20221031094644360.png" alt="image-20221031094644360"></p>
+<p>“比原来更好”的定义是，对于所有的state，新actor的V都要比旧actor的V更大：</p>
+<p><img src="/md_imgs/image-20221031094953175.png" alt="image-20221031094953175"></p>
+<p>光知道这个定义对实操没有任何用，我们实际用到的是下面这个式子：</p>
+<p><img src="/md_imgs/image-20221031095002843.png" alt="image-20221031095002843"></p>
+<p>这个式子就好像是对actor的决策做出的一个限制，或者说引导，它要求actor在看到s的时候，一定要采取某个特定的a，这个a会使$Q^{\pi}(s,a)$最大。满足了这个限制/引导的actor就可以看作我们的新actor，经过证明，它满足上面的定义。</p>
+<h2 id="Training-tips">Training tips</h2>
+<h3 id="Double-DQN">Double DQN</h3>
+<p>我们在用TD法训练Critic的时候，由于式子中有两个变量$Q(s_t, a_t),max(Q(s_{t+1}, a))$，可能会导致训练的过程不太稳定。</p>
+<p>另外，因为target中有一个取最大值的操作，这就很容易选到那个被高估的action以及它对应的Q值，进而让input也会被高估。</p>
+<p><img src="/md_imgs/image-20221031095157476.png" alt="image-20221031095157476"></p>
+<p>因此在实操中，我们会采取target network的做法，它具体来说是这样的：</p>
+<p>我们会初始化一个网络，并把它复制一份，一个当作要训练的critic，一个当作target network。</p>
+<p>在训练过程中，critic接受$s_t$，target network接受$s_{t+1}$，输出对应的值进行训练。但是，target network的参数在训练中是定住的——我们只更新critic的参数。</p>
+<p>只有在critic的参数被update某个次数n后，我们才用critic的参数去覆盖target network的参数。</p>
+<p><img src="/md_imgs/image-20221031095224173.png" alt="image-20221031095224173"></p>
+<h3 id="Dueling-DQN">Dueling DQN</h3>
+<p><img src="/md_imgs/image-20221031095246664.png" alt="image-20221031095246664"></p>
+<p>Dueling DQN对网络的架构做了修改——它在输出层前面加了一层，这层有两个输出：一个是标量，代表$V(S)$，另一个是向量，代表$A(s,a)$，可以理解为在看到s的基础上，采取不同动作a的好坏的评分。两个输出加起来，就得到了$Q(s, a)$。</p>
+<p>这样做的好处是，如果网络接受了某个训练数据，这个训练数据叫它改动某个Q值，比如说$Q(s_1, a_1)$，它可能会选择通过改动$V(s_1)$的值去改动$Q(s_1, a_1)$。但是，如果$V(s_1)$的值动了，动的不仅是$Q(s_1, a_1)$，而是整个输出的<strong>Q</strong>向量（其中包括$Q(s_1, a_2)$, $Q(s_1, a_2)$…）。因此，即使训练过程中某个动作一直没有被sample到，网络也可以更新它的价值。</p>
+<p>在实操中需要注意的一点是，一般需要对A的值做一些限制，比如说要求它里面各个元素的和是0，否则可能出现一种情况，就是网络直接把V的值设为0，然后把A的值当成输出。</p>
+<h3 id="Exploration">Exploration</h3>
+<h4 id="Epsilon-greedy">Epsilon greedy</h4>
+<p>我们刚才讲的Q-Learning算法有一个很大的问题：在看到某一个s后，actor会被强制要求去做出那个使得$Q(s,a)$最大的a，这种做法完全抹杀了随机性，不利于探索。</p>
+<p>解决办法如下：</p>
+<p><img src="/md_imgs/image-20221031095329043.png" alt="image-20221031095329043"></p>
+<p>在多数情况（概率为1-$\epsilon$）下，actor还是被要求做一个特定的a，但在某些情况下，actor会随机选择行动。</p>
+<p>其中$\epsilon$的设置也是有学问的，它会随着时间递减，道理很简单：在刚开始的时候，我们收集的数据很少，需要多做一些exploration，尽可能找到“全局最优”，因此代表随机性的$\epsilon$就要大；越往后面，我们看到的情况越多，陷入“局部最优”的可能越小，$\epsilon$就可以小。</p>
+<h4 id="Boltzmann-Exploration">Boltzmann Exploration</h4>
+<p>这个方法也是为了保证模型的探索，它其实有点像policy gradient的做法，搞出一个a的概率分布，从概率分布里取样得到真正采取的a，只不过这个概率分布是通过Q函数得来的：</p>
+<p><img src="/md_imgs/image-20221031095345688.png" alt="image-20221031095345688"></p>
+<h4 id="Noisy-Net">Noisy Net</h4>
+<p>Epsilon greedy的做法是在网络的输出上加noise，而Noisy Net，顾名思义，就是直接在网络的参数上加noise，比如在每个参数上都加上一个高斯噪声。</p>
+<p>需要注意的是，加噪声这个动作是在<strong>每个episode开始前</strong>进行的，而不是在每次sample action的时候都要做。<strong>这一点是Noisy Net的精髓</strong>。</p>
+<p>在每次sample action的时候加noise的方法，比如Epsilon greedy，有一个很大的问题，就是即使看到同一个s，做出的动作也有可能是不同的，而我们真正在evaluate的时候，想要的却是看到同一个s，只会做出某个动作a。而如果在train的时候用的方法跟evaluate的时候不一样，又怎么能保证train出来的东西能在evaluate的时候有一个好的表现呢？</p>
+<p>相比之下，Noisy Net就显得好了许多，有一个用来形容它的词，叫做“State-dependent exploration”，举个例子来说就是，我会尝试去explore一些新东西，但我这个explore不是乱来，而是有系统的，在看到某一个状态s的时候，我会固定去试试某个动作a，看效果好不好。</p>
+<h3 id="replay-buffer">replay buffer</h3>
+<p>在这个方法中，我们会设置一个buffer，这个buffer有一个容量，其中会存一些训练数据（每一条训练数据包括$s_t, a_t,r_t,s_{t+1}$，当然如果采用MC法就不一样了）。</p>
+<p>在每一个iteration的时候，我们首先会拿actor跟环境做互动收集到数据，然后把这些数据放到buffer里面（如果buffer满了，就要把旧的数据丢掉腾位置）；</p>
+<p>然后，我们不是拿刚刚新收集到的数据去训练critic，而是从buffer里取一定数量的数据来训练critic。</p>
+<p><img src="/md_imgs/image-20221031095442831.png" alt="image-20221031095442831"></p>
+<p>这个方法有两个好处：</p>
+<ol>
+<li>原来的Q-Learning是一个on-policy的做法，每一个iteration都要重新收集一次数据，这很耗时间。而有了buffer之后，虽然每个iteration还是要收集数据，但收集的数据量少了，训练所需的时间也就少了。</li>
+<li>buffer里面的数据来自于多个不同的actor，这保证了数据的多样性，有利于训练。</li>
+</ol>
+<p>最后给出一个更详细的算法流程作为参考：</p>
+<p><img src="/md_imgs/image-20221031095503141.png" alt="image-20221031095503141"></p>
+<h4 id="Prioritized-replay">Prioritized replay</h4>
+<p>在初始的replay buffer中，我们是以相等的概率在buffer里取样来获得每一个batch的。</p>
+<p>这种方法的问题是忽视了训练数据之间的区别。事实上，有些数据比其他数据更重要。</p>
+<p><img src="/md_imgs/image-20221031095544031.png" alt="image-20221031095544031"></p>
+<p>这个式子的左边是input，右边是target，它们之间的距离叫做TD error。不同的训练数据之间有着不同的TD error，而更大的TD error，也许就代表这条数据更难train，需要我们下更大的功夫。</p>
+<p>因此，Prioritized replay就是用TD error来修正训练数据被取样到的的概率：TD error越大，被取样到的概率越大。</p>
+<p>在实操中，Prioritized replay并不只有对取样概率的改变，实际上它还连带着改变了训练的过程，但这里就不细讲。</p>
+<h3 id="Multi-step-TD（MC-TD）">Multi step TD（MC+TD）</h3>
+<p>我们之前一直用的是TD法来训练Critic。具体来说，我们会存下很多$(s_t,a_t,r_t,s_{t+1})$的数据，然后利用上图中的式子进行训练。</p>
+<p>而Multi step TD做的则是，确定一个step长度N，然后收集的训练数据就会变成：</p>
+<p>$(s_t,a_t,r_t,s_{t+1}…s_{t+N},a_{t+N},r_{t+N},s_{t+1+N})$</p>
+<p>进而更新公式就会被换成：</p>
+<p>$Q(s_t,a_t)-&gt;\Sigma_{t’=t} ^{t+N}r_{t’}+max(Q(s_{t+N+1}, a))$</p>
+<h3 id="Distributional-Q-function">Distributional Q function</h3>
+<p>我们原来的Q是一个标量，它代表的是后续奖励的期望。但是，如果只知道期望，我们的决策可能会受到误导。</p>
+<p>比如说，现在有两个信息：</p>
+<ol>
+<li>$a_1$的后续奖励的期望比$a_2$高；</li>
+<li>但$a_1$后续奖励的方差比$a_2$大。</li>
+</ol>
+<p>在知道这两个信息的前提下，出于规避风险的考虑，最优的选择可能是$a_2$。但原来的Q函数只能告诉我们信息1，因此我们会选择其实并不好的$a_1$。</p>
+<p>所以说，一个理想中的Q函数应该输出后续奖励的分布。但是，神经网络是没办法直接输出分布的，但有一个间接的方法可以做：我们可以假设后续奖励都在某个范围，比如说(0, 100)之内，然后我们把这个范围分成几个bin（比如说5个），Critic要输出的是奖励分别在这5个bin里的概率。而如果动作有三种，那么Critic最后就会有3*5个输出。</p>
+<p><img src="/md_imgs/image-20221031095601784.png" alt="image-20221031095601784"></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://example.com">无往不胜</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2023/04/19/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/">http://example.com/2023/04/19/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">无往不胜的博客</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/RL/">RL</a><a class="post-meta__tags" href="/tags/ML/">ML</a></div><div class="post_share"><div class="social-share" data-image="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2023/04/19/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" title="机器学习"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">机器学习</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2023/04/19/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" title="机器学习"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-04-19</div><div class="title">机器学习</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">无往不胜</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">3</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">2</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">1</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-text">第一讲 什么是RL？</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#RL%E4%B8%8E%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-text">RL与机器学习的区别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RL%E4%B8%8E%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%9A%84%E8%81%94%E7%B3%BB%E2%80%94%E2%80%94%E4%B8%89%E6%AD%A5%E9%AA%A4"><span class="toc-text">RL与机器学习的联系——三步骤</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E6%8E%A7%E5%88%B6actor%E7%9A%84%E8%A1%8C%E4%B8%BA"><span class="toc-text">如何控制actor的行为</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-text">第二讲 Policy Gradient</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E4%B8%80"><span class="toc-text">方法一</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E4%BA%8C"><span class="toc-text">方法二</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E4%B8%89"><span class="toc-text">方法三</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E5%9B%9B"><span class="toc-text">方法四</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Policy-Gradient"><span class="toc-text">Policy Gradient</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#On-policy-VS-Off-policy"><span class="toc-text">On-policy VS Off-policy</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9A%8F%E6%9C%BA%E6%80%A7%E7%9A%84%E9%87%8D%E8%A6%81%E6%80%A7"><span class="toc-text">随机性的重要性</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-text">第三讲 Actor-Critic</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B"><span class="toc-text">简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%AD%E7%BB%83Critic"><span class="toc-text">训练Critic</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%92%99%E7%89%B9%E5%8D%A1%E6%B4%9B%E6%B3%95"><span class="toc-text">蒙特卡洛法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%97%B6%E5%BA%8F%E5%B7%AE%E5%88%86%E6%B3%95"><span class="toc-text">时序差分法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%A4%E7%A7%8D%E6%96%B9%E6%B3%95%E7%9A%84%E5%AF%B9%E6%AF%94"><span class="toc-text">两种方法的对比</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E4%BA%94"><span class="toc-text">方法五</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E5%85%AD"><span class="toc-text">方法六</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Actor-Critic%E7%9A%84%E5%8F%82%E6%95%B0%E5%85%B1%E4%BA%AB"><span class="toc-text">Actor Critic的参数共享</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-text">第四讲 Reward Shaping</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-text">第五讲 无reward</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-text">第六讲 PPO</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Importance-Sampling"><span class="toc-text">Importance Sampling</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PPO"><span class="toc-text">PPO</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PPO2"><span class="toc-text">PPO2</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-text">Q-Learning</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%9C%E4%B8%BAV%E5%87%BD%E6%95%B0%E7%9A%84Critic"><span class="toc-text">作为V函数的Critic</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%9C%E4%B8%BAQ%E5%87%BD%E6%95%B0%E7%9A%84Critic"><span class="toc-text">作为Q函数的Critic</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Q-Learning%E7%AE%97%E6%B3%95"><span class="toc-text">Q-Learning算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Training-tips"><span class="toc-text">Training tips</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Double-DQN"><span class="toc-text">Double DQN</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Dueling-DQN"><span class="toc-text">Dueling DQN</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Exploration"><span class="toc-text">Exploration</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Epsilon-greedy"><span class="toc-text">Epsilon greedy</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Boltzmann-Exploration"><span class="toc-text">Boltzmann Exploration</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Noisy-Net"><span class="toc-text">Noisy Net</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#replay-buffer"><span class="toc-text">replay buffer</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Prioritized-replay"><span class="toc-text">Prioritized replay</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Multi-step-TD%EF%BC%88MC-TD%EF%BC%89"><span class="toc-text">Multi step TD（MC+TD）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Distributional-Q-function"><span class="toc-text">Distributional Q function</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/04/19/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/" title="强化学习">强化学习</a><time datetime="2023-04-19T11:50:20.499Z" title="发表于 2023-04-19 19:50:20">2023-04-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2023/04/19/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" title="机器学习">机器学习</a><time datetime="2023-04-19T11:32:30.127Z" title="发表于 2023-04-19 19:32:30">2023-04-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/04/19/hello-world/" title="Hello World"><img src="/cover.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Hello World"/></a><div class="content"><a class="title" href="/2023/04/19/hello-world/" title="Hello World">Hello World</a><time datetime="2023-04-19T09:53:40.323Z" title="发表于 2023-04-19 17:53:40">2023-04-19</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By 无往不胜</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>if (!window.MathJax) {
+  window.MathJax = {
+    tex: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"]],
+      tags: 'ams'
+    },
+    chtml: {
+      scale: 1.1
+    },
+    options: {
+      renderActions: {
+        findScript: [10, doc => {
+          for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+            const display = !!node.type.match(/; *mode=display/)
+            const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+            const text = document.createTextNode('')
+            node.parentNode.replaceChild(text, node)
+            math.start = {node: text, delim: '', n: 0}
+            math.end = {node: text, delim: '', n: 0}
+            doc.math.push(math)
+          }
+        }, ''],
+        insertScript: [200, () => {
+          document.querySelectorAll('mjx-container').forEach(node => {
+            if (node.hasAttribute('display')) {
+              btf.wrap(node, 'div', { class: 'mathjax-overflow' })
+            } else {
+              btf.wrap(node, 'span', { class: 'mathjax-overflow' })
+            }
+          });
+        }, '', false]
+      }
+    }
+  }
+  
+  const script = document.createElement('script')
+  script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+  script.id = 'MathJax-script'
+  script.async = true
+  document.head.appendChild(script)
+} else {
+  MathJax.startup.document.state(0)
+  MathJax.texReset()
+  MathJax.typesetPromise()
+}</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
